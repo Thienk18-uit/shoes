@@ -13,17 +13,19 @@ RUN apt-get update \
 # Set up Apache
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+# Change Apache to listen on port 8080
+RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+
+# Update VirtualHost
+RUN sed -i 's/<VirtualHost \*:80>/<VirtualHost *:8080>/g' /etc/apache2/sites-available/*.conf
+
 WORKDIR /var/www/html
 
 COPY . /var/www/html
-
-# Copy entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
 EXPOSE 8080
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["apache2-foreground"]
