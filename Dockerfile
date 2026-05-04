@@ -13,6 +13,9 @@ RUN apt-get update \
 # Set up Apache
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+# Configure Apache to listen on PORT environment variable or default 8080
+RUN sed -i 's/Listen 80/Listen ${PORT:-8080}/g' /etc/apache2/ports.conf
+
 WORKDIR /var/www/html
 
 COPY . /var/www/html
@@ -20,6 +23,7 @@ COPY . /var/www/html
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
-EXPOSE 80
+EXPOSE 8080
 
-CMD ["apache2-foreground"]
+# Start Apache with port substitution
+CMD ["sh", "-c", "sed -i \"s/Listen 8080/Listen ${PORT:-8080}/g\" /etc/apache2/ports.conf && apache2-foreground"]
