@@ -1,0 +1,16 @@
+.git
+.gitignore
+node_modules
+vendor
+Dockerfile
+docker-compose.yml
+*.log
+.env.local
+.env.*.local
+.DS_Store
+.vscode
+.idea
+*.md
+csrf_exploit_demo.html
+exploit_server.php
+test_csrf_vulnerable.php

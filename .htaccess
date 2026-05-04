@@ -1,0 +1,29 @@
+# Tắt directory listing
+Options -Indexes
+
+# Enable mod_rewrite & mod_headers cho Burp Suite proxy
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    # Fix HTTPS for proxy
+    SetEnvIf X-Forwarded-Proto https HTTPS=on
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Remove restrictive CSP headers khi test
+    Header always unset Content-Security-Policy
+    # Allow CORS cho Burp
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+# Chặn các file nhạy cảm theo tên
+<FilesMatch "^(configs\.php|includes\.php|layout\.php)$">
+Require all denied
+</FilesMatch>
+
+# Chặn các file theo đuôi (.sql, .env, .md)
+<FilesMatch "\.(sql|env|md)$">
+Require all denied
+</FilesMatch>

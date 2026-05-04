@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  web:
+    image: ${DOCKER_IMAGE:-shoes-web:latest}
+    ports:
+      - "0.0.0.0:${PORT:-8080}:80"
+    environment:
+      - APACHE_RUN_USER=www-data
+      - APACHE_RUN_GROUP=www-data
+      - DB_HOST=${DB_HOST:-db}
+      - DB_USER=${DB_USER:-shoestore}
+      - DB_PASS=${DB_PASS:-shoestorepass}
+      - DB_NAME=${DB_NAME:-shoestore}
+    depends_on:
+      - db
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/index.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE: ${DB_NAME:-shoestore}
+      MYSQL_USER: ${DB_USER:-shoestore}
+      MYSQL_PASSWORD: ${DB_PASS:-shoestorepass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./shoestore.sql:/docker-entrypoint-initdb.d/shoestore.sql:ro
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  db_data:
+    driver: local
