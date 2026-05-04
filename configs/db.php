@@ -5,7 +5,10 @@ $pass = getenv('DB_PASS') ?: '';
 $db   = getenv('DB_NAME') ?: 'shoestore';
 
 try {
-    $conn = new mysqli($host, $user, $pass, $db);
+    // Increase connection timeout
+    $conn = new mysqli();
+    $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
+    $conn->real_connect($host, $user, $pass, $db);
     
     if ($conn->connect_error) {
         error_log("MySQL Error: " . $conn->connect_error);
@@ -14,7 +17,6 @@ try {
     
     $conn->set_charset('utf8mb4');
     $conn->query("SET NAMES utf8mb4");
-    $conn->query("SET CHARACTER SET utf8mb4");
 } catch (Exception $e) {
     error_log("Connection Exception: " . $e->getMessage());
     die("Kết nối thất bại: " . $e->getMessage());
