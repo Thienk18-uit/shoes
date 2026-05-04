@@ -1,5 +1,7 @@
 git add .
-git commit -m "fix: Use custom Apache config for port 8080"# 🚀 Hướng dẫn Deploy trên Render + Docker Hub
+git commit -m "fix: Use custom Apache config for port 8080"git add .
+git commit -m "fix: Simplify Dockerfile and fix Apache config order"
+git push origin main# 🚀 Hướng dẫn Deploy trên Render + Docker Hub
 
 ## 📋 Yêu cầu
 - Tài khoản Docker Hub (có rồi ✅)
