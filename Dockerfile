@@ -8,7 +8,10 @@ RUN apt-get update && apt-get install -y \
     a2enmod rewrite && \
     rm -rf /var/lib/apt/lists/*
 
-RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+# Create new ports config
+RUN echo "Listen 8080" > /etc/apache2/ports.conf && \
+    echo "<VirtualHost *:8080>\n  ServerName localhost\n  DocumentRoot /var/www/html\n  <Directory /var/www/html>\n    AllowOverride All\n    Require all granted\n  </Directory>\n</VirtualHost>" > /etc/apache2/sites-available/000-default.conf && \
+    a2ensite 000-default.conf
 
 WORKDIR /var/www/html
 COPY . .
