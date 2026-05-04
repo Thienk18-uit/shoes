@@ -1,4 +1,5 @@
-# 🚀 Hướng dẫn Deploy trên Render + Docker Hub
+git add .
+git commit -m "fix: Use custom Apache config for port 8080"# 🚀 Hướng dẫn Deploy trên Render + Docker Hub
 
 ## 📋 Yêu cầu
 - Tài khoản Docker Hub (có rồi ✅)

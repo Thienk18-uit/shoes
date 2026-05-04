@@ -10,14 +10,14 @@ RUN apt-get update \
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
-# Set up Apache
+# Set Apache to listen on port 8080
+RUN echo "Listen 8080" > /etc/apache2/ports.conf
+
+# Copy custom Apache config
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+
+# Set up Apache ServerName
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
-# Change Apache to listen on port 8080
-RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
-
-# Update VirtualHost
-RUN sed -i 's/<VirtualHost \*:80>/<VirtualHost *:8080>/g' /etc/apache2/sites-available/*.conf
 
 WORKDIR /var/www/html
 
